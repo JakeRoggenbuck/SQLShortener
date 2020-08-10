@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify, request, render_template
+from flask import Flask, render_template
 from database import DataBase
 
 app = Flask(__name__)
@@ -28,6 +28,18 @@ def write(new):
         return f"<h1>Yay! {new[0]} is now a page!</h1>"
     else:
         return f"<h1>Yikes, {new[0]} is taken</h1>"
+
+
+@app.route('/console/<string:data>')
+def console(data):
+    page = ""
+    def field(alias, url): return f"<p><b>{alias}</b> -> {url}</p>"
+    if data == "all":
+        all_links = database.read_all()
+        for links in all_links:
+            page += field(links[2], links[1])
+        return page
+    return "<p>¯\\_(ツ)_/¯ no data</p>"
 
 
 if __name__ == '__main__':
